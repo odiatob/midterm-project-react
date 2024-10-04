@@ -47,6 +47,7 @@ function App() {
   return (
     <div className="App">
       <h1>Inventory Management System</h1>
+      <h3>made by Arvin Zoleta</h3>
 
       <div className="button-container">
         <button onClick={() => setSelectedComponent('AddItem')}>Add Item</button>
