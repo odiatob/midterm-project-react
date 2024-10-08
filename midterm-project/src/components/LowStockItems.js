@@ -1,17 +1,20 @@
-import { useEffect, useState } from 'react';
-import InventoryTable from './InventoryTable';
+import React from 'react';
 
 const LowStockItems = ({ getLowStockItems }) => {
-  const [lowStockItems, setLowStockItems] = useState([]);
-
-  useEffect(() => {
-    setLowStockItems(getLowStockItems());
-  }, [getLowStockItems]);
+  const lowStockItems = getLowStockItems();
 
   return (
-    <div>
+    <div className="section">
       <h2>Low Stock Items</h2>
-      <InventoryTable items={lowStockItems} />
+      {lowStockItems.length > 0 ? (
+        <ul>
+          {lowStockItems.map(item => (
+            <li key={item.id}>{item.name} (Quantity: {item.quantity})</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No low stock items.</p>
+      )}
     </div>
   );
 };

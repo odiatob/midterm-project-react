@@ -1,49 +1,62 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
-const UseInventory = () => {
+const useInventory = () => {
   const [items, setItems] = useState([]);
+  const [message, setMessage] = useState('');
 
   const addItem = (newItem) => {
     setItems([...items, newItem]);
+    setMessage("The item was added to the inventory.");
   };
 
-  const updateItem = (id, newValues) => {
-    const updatedItems = items.map(item => 
-      item.id === id ? { ...item, ...newValues } : item
+  const updateItem = (updatedItem) => {
+    const updatedItems = items.map(item =>
+      item.id === updatedItem.id ? updatedItem : item
     );
     setItems(updatedItems);
+    setMessage("The item was updated successfully.");
   };
 
-  const removeItem = (id) => {
-    const updatedItems = items.filter(item => item.id !== id);
-    setItems(updatedItems);
+  const removeItem = useCallback((id) => {
+    console.log("Removing item: " + id);
+    const filteredItems = items.filter(item => item.id !== id);
+    setItems(filteredItems);
+    setMessage("The item was removed from the inventory.");
+  }, [items]);
+
+
+  const getItemById = (id) => {
+    const item = items.find(item => item.id === id);
+    return item || null;
   };
 
-  const getItemById = (id) => items.find(item => item.id === id);
+ const getAllItems = useCallback(() => {
+  return items;
+ }, [items])
 
-  const getItemsByCategory = (category) => items.filter(item => item.category === category);
+  const getLowStockItems = () => {
+    return items.filter(item => item.quantity < 5);
+  };
 
-  const getAllItems = () => items;
-
-  const getLowStockItems = () => items.filter(item => item.quantity <= 5);
-
-  const sortItems = (key, order) => {
-    const sortedItems = [...items].sort((a, b) => 
-      order === 'asc' ? a[key] - b[key] : b[key] - a[key]
-    );
+  const sortItems = (field) => {
+    const sortedItems = [...items].sort((a, b) => a[field] > b[field] ? 1 : -1);
     setItems(sortedItems);
+    setMessage("Items sorted successfully.");
   };
+
+  const clearMessage = () => setMessage('');
 
   return {
     addItem,
     updateItem,
     removeItem,
     getItemById,
-    getItemsByCategory,
     getAllItems,
     getLowStockItems,
     sortItems,
+    message,
+    clearMessage,
   };
 };
 
-export default UseInventory;
+export default useInventory;

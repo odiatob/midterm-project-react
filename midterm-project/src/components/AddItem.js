@@ -62,7 +62,8 @@ const AddItem = ({ addItem }) => {
         <option value="Electronics">Electronics</option>
         <option value="Entertainment">Entertainment</option>
       </select>
-
+      <div>
+      </div>
       <button onClick={handleAdd}>Add Item</button>
       <p>{message}</p>
     </div>

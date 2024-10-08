@@ -1,36 +1,33 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 const SearchItem = ({ getItemById }) => {
   const [id, setId] = useState('');
   const [item, setItem] = useState(null);
-  const [message, setMessage] = useState('');
 
   const handleSearch = () => {
     const foundItem = getItemById(id);
-    if (foundItem) {
-      setItem(foundItem);
-      setMessage('');
-    } else {
-      setMessage('Item not found!');
-      setItem(null);
-    }
+    setItem(foundItem || null);
   };
 
   return (
-    <div>
+    <div className="section">
       <h2>Search Item</h2>
-      <input type="text" placeholder="ID" value={id} onChange={(e) => setId(e.target.value)} />
+      <input
+        type="number"
+        value={id}
+        onChange={(e) => setId(e.target.value)}
+        placeholder="Enter Item ID"
+      />
       <button onClick={handleSearch}>Search</button>
-      {message && <p>{message}</p>}
       {item && (
         <div>
+          <h3>Item Found:</h3>
           <p>ID: {item.id}</p>
           <p>Name: {item.name}</p>
           <p>Quantity: {item.quantity}</p>
-          <p>Price: {item.price}</p>
-          <p>Category: {item.category}</p>
         </div>
       )}
+      {item === null && id && <p>Item not found.</p>}
     </div>
   );
 };

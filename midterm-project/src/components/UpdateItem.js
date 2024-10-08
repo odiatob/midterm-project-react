@@ -1,27 +1,62 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-const UpdateItem = ({ updateItem }) => {
+const UpdateItem = ({ updateItem, getItemById, getAllItems }) => {
   const [id, setId] = useState('');
-  const [field, setField] = useState('quantity');
-  const [newValue, setNewValue] = useState('');
-  const [message, setMessage] = useState('');
+  const [item, setItem] = useState(null);
+  const items = getAllItems();
 
-  const handleUpdate = () => {
-    const result = updateItem(id, field, Number(newValue));
-    setMessage(result);
+  const handleSearch = () => {
+    const foundItem = getItemById(id);
+    if (foundItem) {
+      setItem(foundItem);
+    } else {
+      alert("Item not found.");
+    }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (item) {
+      setItem({ ...item, [name]: name === 'quantity' ? Number(value) : value });
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (item) {
+      updateItem(item);
+      setItem(null);
+      setId('');
+    }
+  };
+
+
+  if (items.length === 0) {
+    return (
+      <div className='section'>
+        <h1>No items to update.</h1>
+      </div>
+    )
+  }
   return (
-    <div>
+    <div className="section">
       <h2>Update Item</h2>
-      <input type="text" placeholder="ID" value={id} onChange={(e) => setId(e.target.value)} />
-      <select value={field} onChange={(e) => setField(e.target.value)}>
-        <option value="quantity">Quantity</option>
-        <option value="price">Price</option>
-      </select>
-      <input type="number" placeholder="New Value" value={newValue} onChange={(e) => setNewValue(e.target.value)} />
-      <button onClick={handleUpdate}>Update Item</button>
-      <p>{message}</p>
+      <input
+        type="number"
+        value={id}
+        onChange={(e) => setId(e.target.value)}
+        placeholder="Enter Item ID"
+      />
+      <button onClick={handleSearch}>Search</button>
+      {item && (
+        <form onSubmit={handleSubmit}>
+          <label>Name:</label>
+          <input type="text" name="name" value={item.name} onChange={handleChange} />
+          <label>Quantity:</label>
+          <input type="number" name="quantity" value={item.quantity} onChange={handleChange} />
+          <button type="submit">Update Item</button>
+        </form>
+      )}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddItem from './components/AddItem';
 import UpdateItem from './components/UpdateItem';
 import RemoveItem from './components/RemoveItem';
@@ -15,7 +15,6 @@ function App() {
     updateItem,
     removeItem,
     getItemById,
-    getItemsByCategory,
     getAllItems,
     getLowStockItems,
     sortItems,
@@ -23,16 +22,20 @@ function App() {
 
   const [selectedComponent, setSelectedComponent] = useState('');
 
+  useEffect(() => {
+    window.location.href = "#/" + selectedComponent;
+  }, [selectedComponent]);
+
   const renderComponent = () => {
     switch (selectedComponent) {
       case 'AddItem':
         return <AddItem addItem={addItem} />;
       case 'UpdateItem':
-        return <UpdateItem updateItem={updateItem} />;
+        return <UpdateItem updateItem={updateItem} getItemById={getItemById} getAllItems={getAllItems} />;
       case 'RemoveItem':
-        return <RemoveItem removeItem={removeItem} />;
+        return <RemoveItem removeItem={removeItem} getAllItems={getAllItems} />;
       case 'DisplayItems':
-        return <DisplayItems getItemsByCategory={getItemsByCategory} getAllItems={getAllItems} />;
+        return <DisplayItems getAllItems={getAllItems} />;
       case 'SearchItem':
         return <SearchItem getItemById={getItemById} />;
       case 'SortItems':
@@ -58,6 +61,7 @@ function App() {
         <button onClick={() => setSelectedComponent('SortItems')}>Sort Items</button>
         <button onClick={() => setSelectedComponent('LowStockItems')}>Low Stock Items</button>
       </div>
+
 
       <div className="component-container">
         {renderComponent()}
